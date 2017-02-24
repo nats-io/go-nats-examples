@@ -13,7 +13,7 @@ before_script:
 - go fmt $(go list ./... | grep -v /vendor/)
 - go vet $(go list ./... | grep -v /vendor/)
 - gosimple $(go list ./... | grep -v /vendor/)
-- staticcheck -ignore "$(cat staticcheck.ignore)" ./...
+- staticcheck $(go list ./... | grep -v /vendor/)
 script:
 - go build ./... 
 after_script:
