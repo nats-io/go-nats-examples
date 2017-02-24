@@ -10,4 +10,6 @@ install:
 before_script:
 - gometalinter --vendor --deadline 10m --errors ./...
 script:
-- go build ./... 
+- go build $(go list ./... | grep -v /vendor/) 
+after_script:
+- if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]]; then ./scripts/cov.sh TRAVIS; fi
