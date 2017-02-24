@@ -34,6 +34,7 @@ func main() {
 
 	subj, msg := args[0], []byte(args[1])
 
+	// for simplicity, errors are checked below
 	nc.Publish(subj, msg)
 	nc.Flush()
 
