@@ -7,24 +7,35 @@
 # Steps
 
 1. Run a gnatsd server. 
-```go get github.com/gnatsd; gnatsd &```
+	
+	```
+	go get github.com/gnatsd; gnatsd &
+	```
+	
 1. Install the queue subscriber. 
-```go get github.com/nats-io/go-nats-examples/nats-qsub```
-2. Run the first queue_group subscriber
-```
-nats-qsub channel_name queue_group
-```
-3. In a separate terminal window, run the second queue_group subscriber
-```
-nats-qsub channel_name queue_group
-```
+	
+	```
+	go get github.com/nats-io/go-nats-examples/nats-qsub
+	```
+	
+1. Run the first queue_group subscriber. 
+	
+	```
+	nats-qsub channel_name queue_group
+	```
+	
+1. In a separate terminal window, run the second queue_group subscriber. 
+	
+	```
+	nats-qsub channel_name queue_group
+	```
+	
 1. In a 3rd terminal window, send messages to the queue group. 
-```
-go get github.com/nats-io/go-nats-examples/nats-pub
-nats-pub channel_name message1
-nats-pub channel_name message2;
-```
+	
+	```
+	go get github.com/nats-io/go-nats-examples/nats-pub
+	nats-pub channel_name message1
+	nats-pub channel_name message2
+	```
 
 # Further Reading 
-
-
