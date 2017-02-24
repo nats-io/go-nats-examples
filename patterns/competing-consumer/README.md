@@ -21,21 +21,21 @@
 1. Run the first queue_group subscriber. 
 	
 	```
-	nats-qsub channel_name queue_group
+	nats-qsub subject queue_group
 	```
 	
 1. In a separate terminal window, run the second queue_group subscriber. 
 	
 	```
-	nats-qsub channel_name queue_group
+	nats-qsub subject queue_group
 	```
 	
 1. In a 3rd terminal window, send messages to the queue group. 
 	
 	```
 	go get github.com/nats-io/go-nats-examples/nats-pub
-	nats-pub channel_name message1
-	nats-pub channel_name message2
+	nats-pub subject message1
+	nats-pub subject message2
 	```
 
 # Further Reading 
