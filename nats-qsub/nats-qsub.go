@@ -40,6 +40,7 @@ func main() {
 
 	subj, queue, i := args[0], args[1], 0
 
+	// for simplicy, errors are checked below
 	nc.QueueSubscribe(subj, queue, func(msg *nats.Msg) {
 		i++
 		printMsg(msg, i)

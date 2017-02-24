@@ -39,8 +39,9 @@ func main() {
 
 	subj, i := args[0], 0
 
+	// for simplicy, errors are checked below
 	nc.Subscribe(subj, func(msg *nats.Msg) {
-		i += 1
+		i++
 		printMsg(msg, i)
 	})
 	nc.Flush()

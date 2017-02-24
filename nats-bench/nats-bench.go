@@ -91,7 +91,9 @@ func main() {
 
 	if len(*csvFile) > 0 {
 		csv := benchmark.CSV()
-		ioutil.WriteFile(*csvFile, []byte(csv), 0644)
+		if err := ioutil.WriteFile(*csvFile, []byte(csv), 0644); err != nil {
+			log.Printf("Unable to save metric data to file %s: %v", *csvFile, err)
+		}
 		fmt.Printf("Saved metric data in csv file %s\n", *csvFile)
 	}
 }
@@ -116,7 +118,11 @@ func runPublisher(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs in
 	for i := 0; i < numMsgs; i++ {
 		nc.Publish(subj, msg)
 	}
-	nc.Flush()
+
+	if err = nc.Flush(); err != nil {
+		log.Printf("Unable to flush: %v", err)
+	}
+
 	benchmark.AddPubSample(bench.NewSample(numMsgs, msgSize, start, time.Now(), nc))
 
 	donewg.Done()
@@ -133,7 +139,7 @@ func runSubscriber(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs i
 
 	received := 0
 	start := time.Now()
-	nc.Subscribe(subj, func(msg *nats.Msg) {
+	_, err = nc.Subscribe(subj, func(msg *nats.Msg) {
 		received++
 		if received >= numMsgs {
 			benchmark.AddSubSample(bench.NewSample(numMsgs, msgSize, start, time.Now(), nc))
@@ -141,6 +147,11 @@ func runSubscriber(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs i
 			nc.Close()
 		}
 	})
-	nc.Flush()
+	if err != nil {
+		log.Fatalf("Can't subscribe to %q: %v", subj, err)
+	}
+	if err = nc.Flush(); err != nil {
+		log.Fatalf("Error flushing: %v", err)
+	}
 	startwg.Done()
 }

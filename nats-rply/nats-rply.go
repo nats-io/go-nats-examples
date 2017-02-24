@@ -39,10 +39,13 @@ func main() {
 
 	subj, reply, i := args[0], args[1], 0
 
+	// for simplicity, errors are checked below
 	nc.Subscribe(subj, func(msg *nats.Msg) {
 		i++
 		printMsg(msg, i)
-		nc.Publish(msg.Reply, []byte(reply))
+		if err := nc.Publish(msg.Reply, []byte(reply)); err != nil {
+			log.Printf("Unable to publish: %v", err)
+		}
 	})
 	nc.Flush()
 
