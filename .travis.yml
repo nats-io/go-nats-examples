@@ -5,16 +5,9 @@ go:
 - 1.7.4
 install:
 - go get -t ./...
-- go get github.com/mattn/goveralls
-- go get github.com/wadey/gocovmerge
-- go get honnef.co/go/tools/cmd/staticcheck
-- go get honnef.co/go/tools/cmd/gosimple
+- go get github.com/alecthomas/gometalinter
+- gometalinter --install
 before_script:
-- go fmt $(go list ./... | grep -v /vendor/)
-- go vet $(go list ./... | grep -v /vendor/)
-- gosimple $(go list ./... | grep -v /vendor/)
-- staticcheck $(go list ./... | grep -v /vendor/)
+- gometalinter --deadline 10m $(go list ./... | grep -v /vendor/ | awk -F\/ '{ print $NF}')
 script:
 - go build ./... 
-after_script:
-- if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]]; then ./scripts/cov.sh TRAVIS; fi
