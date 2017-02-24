@@ -8,6 +8,6 @@ install:
 - go get github.com/alecthomas/gometalinter
 - gometalinter --install
 before_script:
-- gometalinter --deadline 10m $(go list ./... | grep -v /vendor/ | awk -F\/ '{ print $NF}')
+- gometalinter --vendor --deadline 10m --errors ./...
 script:
 - go build ./... 
