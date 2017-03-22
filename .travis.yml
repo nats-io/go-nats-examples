@@ -7,5 +7,5 @@ install:
 - go get github.com/alecthomas/gometalinter
 - gometalinter --install
 script:
-- go build $(go list ./... | grep -v /vendor/) 
-- travis_wait 20 gometalinter ./... --vendor --deadline 20m --error --disable=errcheck --disable=structcheck --disable alignchecks
+- go install $(go list ./... | grep -v /vendor/) 
+- travis_wait 20 gometalinter ./... --vendor --deadline 20m --disable=errcheck --disable=structcheck --disable alignchecks
