@@ -8,4 +8,4 @@ install:
 - gometalinter --install
 script:
 - go install $(go list ./... | grep -v /vendor/) 
-- travis_wait 20 gometalinter ./... --vendor --deadline 20m --disable=errcheck --disable=structcheck --disable alignchecks
+- travis_wait 20 gometalinter ./... --vendor --deadline 20m --disable=errcheck --disable=structcheck --disable aligncheck --errors
