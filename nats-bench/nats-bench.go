@@ -13,6 +13,7 @@ import (
 
 	"github.com/nats-io/go-nats"
 	"github.com/nats-io/go-nats/bench"
+	"math/rand"
 )
 
 // Some sane defaults
@@ -66,9 +67,17 @@ func main() {
 
 	donewg.Add(*numPubs + *numSubs)
 
+	//opts.Timeout = 30 * time.Second
+	//opts.AllowReconnect = true
+	//opts.MaxReconnect = 5
+
+	rand.Seed(time.Now().Unix())
+
 	// Run Subscribers first
 	startwg.Add(*numSubs)
 	for i := 0; i < *numSubs; i++ {
+		// add a random wait time
+		time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
 		go runSubscriber(&startwg, &donewg, opts, *numMsgs, *msgSize)
 	}
 	startwg.Wait()
@@ -101,7 +110,9 @@ func main() {
 func runPublisher(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs int, msgSize int) {
 	nc, err := opts.Connect()
 	if err != nil {
-		log.Fatalf("Can't connect: %v\n", err)
+		log.Printf("Publisher can't connect: %v\n", err)
+		donewg.Done()
+		return
 	}
 	defer nc.Close()
 	startwg.Done()
@@ -115,43 +126,69 @@ func runPublisher(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs in
 
 	start := time.Now()
 
+	rand.Seed(start.Unix())
+
 	for i := 0; i < numMsgs; i++ {
+
+		// add a random wait time
+		time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
 		nc.Publish(subj, msg)
 	}
+
+	benchmark.AddPubSample(bench.NewSample(numMsgs, msgSize, start, time.Now(), nc))
 
 	if err = nc.Flush(); err != nil {
 		log.Printf("Unable to flush: %v", err)
 	}
 
-	benchmark.AddPubSample(bench.NewSample(numMsgs, msgSize, start, time.Now(), nc))
-
 	donewg.Done()
 }
 
 func runSubscriber(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs int, msgSize int) {
+	received := 0
+	start := time.Now()
+
+	opts.ClosedCB = func(nc *nats.Conn) {
+		benchmark.AddSubSample(bench.NewSample(numMsgs, msgSize, start, time.Now(), nc))
+		donewg.Done()
+	}
+
+	opts.DisconnectedCB = func(nc *nats.Conn) {
+		if !nc.IsClosed() {
+			nc.Close()
+		}
+	}
+
 	nc, err := opts.Connect()
+
 	if err != nil {
-		log.Fatalf("Can't connect: %v\n", err)
+		log.Printf("Can't connect: %v\n", err)
+		donewg.Done()
+		startwg.Done()
+		return
 	}
 
 	args := flag.Args()
 	subj := args[0]
 
-	received := 0
-	start := time.Now()
 	_, err = nc.Subscribe(subj, func(msg *nats.Msg) {
+		if received == 0 {
+			start = time.Now()
+		}
 		received++
 		if received >= numMsgs {
-			benchmark.AddSubSample(bench.NewSample(numMsgs, msgSize, start, time.Now(), nc))
-			donewg.Done()
 			nc.Close()
 		}
 	})
+
 	if err != nil {
-		log.Fatalf("Can't subscribe to %q: %v", subj, err)
+		donewg.Done()
+		log.Printf("Can't subscribe to %q: %v", subj, err)
+
 	}
 	if err = nc.Flush(); err != nil {
-		log.Fatalf("Error flushing: %v", err)
+		donewg.Done()
+		log.Printf("Error flushing: %v", err)
 	}
 	startwg.Done()
 }
