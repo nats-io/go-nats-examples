@@ -1,0 +1,62 @@
+// Copyright 2012-2016 Apcera Inc. All rights reserved.
+
+package main
+
+import (
+	"flag"
+	"log"
+	"runtime"
+
+	"github.com/nats-io/go-nats"
+)
+
+// NOTE: Use tls scheme for TLS, e.g. nats-rply -s tls://demo.nats.io:4443 foo hello
+func usage() {
+	log.Fatalf("Usage: nats-rply [-s server][-t] <subject> <queuegroup> <reponse>\n")
+}
+
+func printMsg(m *nats.Msg, i int) {
+	log.Printf("[#%d] Received on [%s]: '%s'\n", i, m.Subject, string(m.Data))
+}
+
+func main() {
+	var urls = flag.String("s", nats.DefaultURL, "The nats server URLs (separated by comma)")
+	var showTime = flag.Bool("t", false, "Display timestamps")
+
+	log.SetFlags(0)
+	flag.Usage = usage
+	flag.Parse()
+
+	args := flag.Args()
+	if len(args) < 3 {
+		usage()
+	}
+
+	nc, err := nats.Connect(*urls)
+	if err != nil {
+		log.Fatalf("Can't connect: %v\n", err)
+	}
+
+	subj, queueGroup, reply, i := args[0], args[1], args[2], 0
+
+	// for simplicity, errors are checked below
+	nc.QueueSubscribe(subj, queueGroup, func(msg *nats.Msg) {
+		i++
+		printMsg(msg, i)
+		if err := nc.Publish(msg.Reply, []byte(reply)); err != nil {
+			log.Printf("Unable to publish: %v", err)
+		}
+	})
+	nc.Flush()
+
+	if err := nc.LastError(); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Listening on [%s] [Group: %s]\n", subj, queueGroup)
+	if *showTime {
+		log.SetFlags(log.LstdFlags)
+	}
+
+	runtime.Goexit()
+}
