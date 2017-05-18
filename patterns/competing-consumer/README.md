@@ -6,7 +6,7 @@
 
 # Steps
 
-1. Run a gnatsd server. 
+1. Run a [gnatsd](http://www.github.com/nats-io/gnatsd) server or a [NATS.cloud](nats.cloud) instance.
 	
 	```
 	go get github.com/gnatsd; gnatsd &

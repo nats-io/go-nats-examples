@@ -10,13 +10,6 @@ This repo contains go-gettable [go-nats](www.github.com/nats-io/go-nats) example
 This includes all documentation examples and any common message pattern
 examples.
 
-# Patterns
-The patterns directory contains a listing of example messaging patterns:
-
-  1. [Publish/Subscribe](/patterns/publish-subscribe)
-  1. [Request/Reply](/patterns/request-reply)
-  1. [Competing Consumer](/patterns/competing-consumer/)
-
 # Verify a NATS Server
 To verify a NATS Server either your own
 [gnatsd](www.github.com/nats-io/gnatsd) or a
@@ -41,3 +34,10 @@ To verify a NATS Server either your own
      Listening on [channel_name]
      [#1] Received on [channel_name]: 'message'
      ```
+
+# Patterns
+The patterns directory contains a listing of example messaging patterns:
+
+  1. [Publish/Subscribe](/patterns/publish-subscribe)
+  1. [Request/Reply](/patterns/request-reply)
+  1. [Competing Consumer](/patterns/competing-consumer/)
