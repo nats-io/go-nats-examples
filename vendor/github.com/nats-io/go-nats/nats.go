@@ -956,6 +956,7 @@ func (nc *Conn) connect() error {
 			// Cancel out default connection refused, will trigger the
 			// No servers error conditional
 			if matched, _ := regexp.Match(`connection refused`, []byte(err.Error())); matched {
+				fmt.Errorf("connection refused: %v\n", err)
 				returnedErr = nil
 			}
 		}
@@ -963,6 +964,7 @@ func (nc *Conn) connect() error {
 	defer nc.mu.Unlock()
 
 	if returnedErr == nil && nc.status != CONNECTED {
+		fmt.Printf("Returning no servers because nc.status = %v\n", nc.status)
 		returnedErr = ErrNoServers
 	}
 	return returnedErr
