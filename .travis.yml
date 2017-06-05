@@ -4,7 +4,7 @@ go:
 - 1.6.4
 - 1.7.4
 install:
-- export GOFILES=$(go get ./... | grep -v "/vendor/")
+- export GOFILES=$(go list ./... | grep -v "/vendor/")
 - go get -t ./...
 - go get honnef.co/go/tools/cmd/staticcheck
 - go get honnef.co/go/tools/cmd/gosimple
