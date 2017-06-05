@@ -11,7 +11,7 @@ message (at-most in the case of gnatsd) once and consumed copies disappear from 
 "
 
 # Publish / Subscribe
-To verify a NATS Server with either your own
+To demonstrate publish/subscribe on a NATS Server with either your own
 [gnatsd](http://www.github.com/nats-io/gnatsd) or a
 [NATS.cloud](https://www.nats.cloud) instance:
 
