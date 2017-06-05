@@ -1,5 +1,5 @@
 # Overview
-(Publish Subscribe Channel)[http://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html]
+[Publish Subscribe Channel](http://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
 
 "A Publish-Subscribe Channel works like this: It has one input channel
 that splits into multiple output channels, one for each subscriber.
