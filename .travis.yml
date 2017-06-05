@@ -4,18 +4,18 @@ go:
 - 1.6.4
 - 1.7.4
 install:
-- export GOFILES=$(go list ./... | grep -v "/vendor/")
+- EXCLUDE_VENDOR=$(go list ./... | grep -v "/vendor/")
 - go get -t ./...
 - go get honnef.co/go/tools/cmd/staticcheck
 - go get honnef.co/go/tools/cmd/gosimple
 before_script:
-- go fmt $(GOFILES)
-- go vet $(GOFILES)
-- gosimple $(GOFILES)
-- staticcheck -ignore "$(cat staticcheck.ignore)" $(GOFILES) 
+- go fmt $EXCLUDE_VENDOR 
+- go vet $EXCLUDE_VENDOR 
+- gosimple $EXCLUDE_VENDOR
+- staticcheck -ignore "$(cat staticcheck.ignore)" $EXCLUDE_VENDOR 
 script:
-- go test -i -race $(GOFILES)
-- go test -v -race $(GOFILES)
+- go test -i -race $EXCLUDE_VENDOR 
+- go test -v -race $EXCLUDE_VENDOR 
 after_script:
 - if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]]; then ./scripts/cov.sh TRAVIS; fi
 - if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]] && [ "$TRAVIS_TAG" != "" ]; then ./cross_compile.sh $TRAVIS_TAG; ghr --owner nats-io --token $GITHUB_TOKEN --draft --replace $TRAVIS_TAG release/; fi
