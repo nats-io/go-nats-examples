@@ -38,4 +38,4 @@
 	nats-pub subject message2
 	```
 
-# Further Reading 
+1. The nats-qsubs will pull of the next messages one at a time.

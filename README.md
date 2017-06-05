@@ -11,7 +11,7 @@ This includes all documentation examples and any common message pattern
 examples.
 
 # Verify a NATS Server
-To verify a NATS Server either your own
+To verify a NATS Server with either your own
 [gnatsd](www.github.com/nats-io/gnatsd) or a
 [NATS.cloud](www.nats.cloud) instance:
 

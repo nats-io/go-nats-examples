@@ -11,9 +11,9 @@ message (at-most in the case of gnatsd) once and consumed copies disappear from 
 "
 
 # Publish / Subscribe
-To verify a NATS Server either your own
-[gnatsd](www.github.com/nats-io/gnatsd) or a
-[NATS.cloud](www.nats.cloud) instance:
+To verify a NATS Server with either your own
+[gnatsd](http://www.github.com/nats-io/gnatsd) or a
+[NATS.cloud](https://www.nats.cloud) instance:
 
   1. Get and run nats-sub:
      ```
