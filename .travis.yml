@@ -16,7 +16,7 @@ before_script:
 script:
 - go test -i -race $EXCLUDE_VENDOR
 - go test -v -race $EXCLUDE_VENDOR
-- if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]] && [ "$TRAVIS_TAG" != "" ]; then ./cross_compile.sh
+- if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]] && [ "$TRAVIS_TAG" != "" ]; then ./cross_compile.sh; fi;
 deploy:
   provider: releases
   api_key:
