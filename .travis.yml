@@ -9,14 +9,23 @@ install:
 - go get honnef.co/go/tools/cmd/staticcheck
 - go get honnef.co/go/tools/cmd/gosimple
 before_script:
-- go fmt $EXCLUDE_VENDOR 
-- go vet $EXCLUDE_VENDOR 
+- go fmt $EXCLUDE_VENDOR
+- go vet $EXCLUDE_VENDOR
 - gosimple $EXCLUDE_VENDOR
-- staticcheck -ignore "$(cat staticcheck.ignore)" $EXCLUDE_VENDOR 
+- staticcheck -ignore "$(cat staticcheck.ignore)" $EXCLUDE_VENDOR
 script:
-- go test -i -race $EXCLUDE_VENDOR 
-- go test -v -race $EXCLUDE_VENDOR 
+- go test -i -race $EXCLUDE_VENDOR
+- go test -v -race $EXCLUDE_VENDOR
 after_script:
 - if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]]; then ./scripts/cov.sh TRAVIS; fi
-- if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]] && [ "$TRAVIS_TAG" != "" ]; then ./cross_compile.sh $TRAVIS_TAG; ghr --owner nats-io --token $GITHUB_TOKEN --draft --replace $TRAVIS_TAG release/; fi
-
+- if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]] && [ "$TRAVIS_TAG" != "" ]; then ./cross_compile.sh
+  $TRAVIS_TAG; ghr --owner nats-io --token $GITHUB_TOKEN --draft --replace $TRAVIS_TAG
+  release/; fi
+deploy:
+  provider: releases
+  api_key:
+    secure: iMdw4cBeE/zUt9VglblZUqLENeFkXYCfyjhGgEqp6tcQhAnZPg0GPzKzvoJvOf96gWgRbIfsVq4uXpdklPplepWXWlLWs/opfgrGZ/VlpJlN052wyfNJ1Jy+b59ZlhEvoTCt7bxywYEYtVr5WUJpQalMOUjvImCLYGZcUCZ4yGoOryLUx2m7eGRsGe22tQyeSG24wLs7fqcw+cR3u0uomP8Uw7baBjJA9m5yhTEZhUc1aFl71/W5FELMulUbjvZkZaFjgmwXJ7TUiMLZ1LRCA8yLZ7hTKpd4Fgi+ITvUP4ApYDOPIXe64RKb2GLJv9QPWtS4kwqbpTBef14CJiNo6h5U3QjorGUEpXIXoRXspWby9+anGMD3iibfpW26gz7syaGDEbzWoobzFNP2JAWUAHEQl5YYd5l9R04ktS0Bjl7MUZEgCkqgi0JahkQPCEAuHyTNDNbTUz0tkL9hlmzgij7kVNB4SNVfALG7myh6dUfSWq77N4uPdqsQkRsqCjdA+9pKa0lBDu9WEXnP5CUTT/SgpOvJjjVoHS1cWqsYzci+2peR5LfivoDjtn00btVH7zBhE3pOpyFkVtQwQ81E2OzWpCvgbBtmLsBo+XWVf2b0PC018w1XbckyDU12+w2rgR0iqc9FLxXpbm/bHfIAn1bU1m+oHBGWjlHjaXp6W0M=
+  file: 'releases/*.zip'
+  on:
+    repo: nats-io/go-nats-examples
+    tags: true 
