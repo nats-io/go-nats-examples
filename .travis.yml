@@ -16,7 +16,6 @@ before_script:
 script:
 - go test -i -race $EXCLUDE_VENDOR
 - go test -v -race $EXCLUDE_VENDOR
-after_script:
 - if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]]; then ./scripts/cov.sh TRAVIS; fi
 - if [[ "$TRAVIS_GO_VERSION" == 1.7.* ]] && [ "$TRAVIS_TAG" != "" ]; then ./cross_compile.sh
 deploy:
