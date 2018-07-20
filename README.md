@@ -1,14 +1,14 @@
 ![](https://raw.githubusercontent.com/nats-io/nats-site/master/src/img/large-logo.png)
+
 # NATS - Go Examples and CLI Clients
+
 [Go](http://www.golang.org) examples and CLI clients for the [NATS messaging system](https://nats.io).
 
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/nats-io/java-nats.svg?branch=master)](http://travis-ci.org/nats-io/go-nats-examples)
 
 # Overview
-This repo contains go-gettable [go-nats](www.github.com/nats-io/go-nats) example client code.
-This includes all documentation examples and any common message pattern
-examples.
+This repo contains go-gettable [go-nats](www.github.com/nats-io/go-nats) example client code as well as example code from the documentation.
 
 # Verify a NATS Server
 To verify a NATS Server with either your own
@@ -17,12 +17,12 @@ To verify a NATS Server with either your own
 
   1. Get and run nats-sub:
      ```
-     go get github.com/nats-io/go-nats-examples/nats-sub
+     go get github.com/nats-io/go-nats-examples/tools/nats-sub
      nats-sub -s tls://user:password@server:port channel_name
      ```
   1. Get and run nats-pub:
      ```
-     go get github.com/nats-io/go-nats-examples/nats-pub
+     go get github.com/nats-io/go-nats-examples/tools/nats-pub
      nats-pub -s tls://user:password@server:port channel_name message
      ```
   1. Verify publisher output:
