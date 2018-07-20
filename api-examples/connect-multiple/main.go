@@ -15,5 +15,6 @@ func main() {
 	defer nc.Close()
 
 	// Do something with the connection
+
 	// [end connect_multiple]
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	// [begin connect_url]
+	// [begin connect_default]
 	nc, err := nats.Connect(nats.DefaultURL)
 	if err != nil {
 		log.Fatal(err)
@@ -16,5 +16,5 @@ func main() {
 
 	// Do something with the connection
 
-	// [end connect_url]
+	// [end connect_default]
 }
