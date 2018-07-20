@@ -2,7 +2,6 @@ language: go
 sudo: false
 go:
 - 1.1.0
-install:
 before_script:
 - go list ./... | xargs go vet -v
 script:
