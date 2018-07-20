@@ -2,13 +2,19 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/nats-io/go-nats"
 )
 
 func main() {
 	// [begin connect_multiple]
-	nc, err := nats.Connect("nats://localhost:1222, nats://localhost:1223, nats://localhost:1224")
+	servers := []string{"nats://localhost:1222",
+		"nats://localhost:1223",
+		"nats://localhost:1224",
+	}
+
+	nc, err := nats.Connect(strings.Join(servers, ","))
 	if err != nil {
 		log.Fatal(err)
 	}
