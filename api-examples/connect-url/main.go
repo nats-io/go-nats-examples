@@ -13,5 +13,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer nc.Close()
+
+	// Do something with the connection
 	// [end connect_url]
 }

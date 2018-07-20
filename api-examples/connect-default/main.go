@@ -7,11 +7,14 @@ import (
 )
 
 func main() {
-	// [begin connect_default]
+	// [begin connect_url]
 	nc, err := nats.Connect(nats.DefaultURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer nc.Close()
-	// [end connect_default]
+
+	// Do something with the connection
+
+	// [end connect_url]
 }
