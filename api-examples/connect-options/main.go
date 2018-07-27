@@ -9,11 +9,7 @@ import (
 
 func main() {
 	// [begin connect_options]
-	opts := nats.Options{
-		Timeout: 10 * time.Second,
-	}
-
-	nc, err := opts.Connect()
+	nc, err := nats.Connect(nats.DefaultURL, nats.Timeout(10*time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
