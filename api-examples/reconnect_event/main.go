@@ -7,8 +7,7 @@ import (
 )
 
 func main() {
-	// [begin connect_url]
-
+	// [begin reconnect_event]
 	// Connection event handlers are invoked asynchronously
 	// and the state of the connection may have changed when
 	// the callback is invoked.
@@ -26,5 +25,5 @@ func main() {
 
 	// Do something with the connection
 
-	// [end connect_url]
+	// [end reconnect_event]
 }

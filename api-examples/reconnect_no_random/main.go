@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	// [begin connect_multiple]
+	// [begin reconnect_no_random]
 	servers := []string{"nats://localhost:1222",
 		"nats://localhost:1223",
 		"nats://localhost:1224",
@@ -22,5 +22,5 @@ func main() {
 
 	// Do something with the connection
 
-	// [end connect_multiple]
+	// [end reconnect_no_random]
 }
