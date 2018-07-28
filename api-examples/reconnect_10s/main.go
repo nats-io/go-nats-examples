@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	// [begin connect_url]
+	// [begin reconnect_10s]
 	// Set reconnect interval to 10 seconds
 	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.ReconnectWait(10*time.Second))
 	if err != nil {
@@ -18,5 +18,5 @@ func main() {
 
 	// Do something with the connection
 
-	// [end connect_url]
+	// [end reconnect_10s]
 }
