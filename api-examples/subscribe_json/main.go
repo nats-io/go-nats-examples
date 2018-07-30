@@ -2,19 +2,20 @@ package main
 
 import (
 	"log"
+	"sync"
 
 	"github.com/nats-io/go-nats"
 )
 
 func main() {
-	// [begin publish_json]
+	// [begin subscribe_json]
 	nc, err := nats.Connect("nats://demo.nats.io:4222")
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer nc.Close()
 	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	if err != nil {
-		nc.Close()
 		log.Fatal(err)
 	}
 	defer ec.Close()
@@ -25,11 +26,21 @@ func main() {
 		Price  int
 	}
 
-	// Publish the message
-	if err := ec.Publish("updates", &stock{Symbol: "GOOG", Price: 1200}); err != nil {
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+
+	// Subscribe
+	if _, err := ec.Subscribe("updates", func(s *stock) {
+		log.Printf("Stock: %s - Price: %v", s.Symbol, s.Price)
+		wg.Done()
+	}); err != nil {
 		log.Fatal(err)
 	}
-	// Make sure the message goes through before we close
-	ec.Flush()
-	// [end publish_json]
+
+	// Wait for a message to come in
+	wg.Wait()
+
+	// Close the connection
+	ec.Close()
+	// [end subscribe_json]
 }
