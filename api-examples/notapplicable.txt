@@ -1,13 +1,14 @@
 [begin control_2k]
-This does not apply to the NATS GO Client
+// This does not apply to the NATS Go Client
 [end control_2k]
 
 [begin connection_listener]
-There is not a single listener for connection events in the NATS GO Client.
-Instead, you can set individual event handlers using
-- DisconnectHandler(cb ConnHandler)
-- ReconnectHandler(cb ConnHandler)
-- ClosedHandler(cb ConnHandler)
-- DiscoveredServersHandler(cb ConnHandler)
-- ErrorHandler(cb ErrHandler)
+// There is not a single listener for connection events in the NATS Go Client.
+// Instead, you can set individual event handlers using:
+
+DisconnectHandler(cb ConnHandler)
+ReconnectHandler(cb ConnHandler)
+ClosedHandler(cb ConnHandler)
+DiscoveredServersHandler(cb ConnHandler)
+ErrorHandler(cb ErrHandler)
 [end connection_listener]
