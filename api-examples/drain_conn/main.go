@@ -26,8 +26,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
-
 	// Do something with the connection
 
 	// Drain the connection, which will close it when done.
