@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin connect_token]
 	// Set a token
-	nc, err := nats.Connect("nats://localhost:4222", nats.Token("mytoken"))
+	nc, err := nats.Connect("localhost", nats.Token("mytoken"))
 	if err != nil {
 		log.Fatal(err)
 	}

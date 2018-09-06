@@ -15,7 +15,11 @@ func main() {
 
 	errCh := make(chan error, 1)
 
-	nc, err := nats.Connect("nats://demo.nats.io:4222",
+	// To simulate a timeout, you would set the DrainTimeout()
+	// to a value less than the time spent in the message callback,
+	// so say: nats.DrainTimeout(10*time.Millisecond).
+
+	nc, err := nats.Connect("demo.nats.io",
 		nats.DrainTimeout(10*time.Second),
 		nats.ErrorHandler(func(_ *nats.Conn, _ *nats.Subscription, err error) {
 			errCh <- err
@@ -26,7 +30,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Do something with the connection
+
+	// Subscribe, but add some delay while processing.
+	if _, err := nc.Subscribe("foo", func(_ *nats.Msg) {
+		time.Sleep(200 * time.Millisecond)
+	}); err != nil {
+		log.Fatal(err)
+	}
+
+	// Publish a message
+	if err := nc.Publish("foo", []byte("hello")); err != nil {
+		log.Fatal(err)
+	}
 
 	// Drain the connection, which will close it when done.
 	if err := nc.Drain(); err != nil {

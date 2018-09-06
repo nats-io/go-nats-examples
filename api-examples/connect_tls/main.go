@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// [begin connect_tls]
-	nc, err := nats.Connect("nats://localhost:4222",
+	nc, err := nats.Connect("localhost",
 		nats.ClientCert("resources/certs/cert.pem", "resources/certs/key.pem"),
 		nats.RootCAs("resources/certs/ca.pem"))
 	if err != nil {

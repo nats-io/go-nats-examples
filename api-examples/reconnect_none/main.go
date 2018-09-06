@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin reconnect_none]
 	// Disable reconnect attempts
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.NoReconnect())
+	nc, err := nats.Connect("demo.nats.io", nats.NoReconnect())
 	if err != nil {
 		log.Fatal(err)
 	}

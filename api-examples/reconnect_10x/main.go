@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin reconnect_10x]
 	// Set max reconnects attempts
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.MaxReconnects(10))
+	nc, err := nats.Connect("demo.nats.io", nats.MaxReconnects(10))
 	if err != nil {
 		log.Fatal(err)
 	}

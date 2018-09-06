@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin reconnect_5mb]
 	// Set reconnect buffer size in bytes (5 MB)
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.ReconnectBufSize(5*1024*1024))
+	nc, err := nats.Connect("demo.nats.io", nats.ReconnectBufSize(5*1024*1024))
 	if err != nil {
 		log.Fatal(err)
 	}

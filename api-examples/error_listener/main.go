@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin error_listener]
 	// Set the callback that will be invoked when an asynchronous error occurs.
-	nc, err := nats.Connect("nats://demo.nats.io:4222",
+	nc, err := nats.Connect("demo.nats.io",
 		nats.ErrorHandler(func(nc *nats.Conn, sub *nats.Subscription, err error) {
 			log.Printf("Error: %v", err)
 		}))

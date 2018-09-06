@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin connect_name]
 	// Set a connection name
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.Name("my-connection"))
+	nc, err := nats.Connect("demo.nats.io", nats.Name("my-connection"))
 	if err != nil {
 		log.Fatal(err)
 	}

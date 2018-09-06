@@ -11,7 +11,7 @@ func main() {
 	// Connection event handlers are invoked asynchronously
 	// and the state of the connection may have changed when
 	// the callback is invoked.
-	nc, err := nats.Connect("nats://demo.nats.io:4222",
+	nc, err := nats.Connect("demo.nats.io",
 		nats.DisconnectHandler(func(nc *nats.Conn) {
 			// handle disconnect event
 		}),
