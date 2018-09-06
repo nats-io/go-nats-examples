@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// [begin subscribe_queue]
-	nc, err := nats.Connect("nats://demo.nats.io:4222")
+	nc, err := nats.Connect("demo.nats.io")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -10,7 +10,7 @@ import (
 func main() {
 	// [begin reconnect_10s]
 	// Set reconnect interval to 10 seconds
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.ReconnectWait(10*time.Second))
+	nc, err := nats.Connect("demo.nats.io", nats.ReconnectWait(10*time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}

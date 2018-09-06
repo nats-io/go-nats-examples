@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// [begin slow_pending_limits]
-	nc, err := nats.Connect("nats://demo.nats.io:4222")
+	nc, err := nats.Connect("demo.nats.io")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin no_echo]
 	// Turn off echo
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.NoEcho())
+	nc, err := nats.Connect("demo.nats.io", nats.NoEcho())
 	if err != nil {
 		log.Fatal(err)
 	}

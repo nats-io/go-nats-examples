@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin slow_listener]
 	// Set the callback that will be invoked when an asynchronous error occurs.
-	nc, err := nats.Connect("nats://demo.nats.io:4222",
+	nc, err := nats.Connect("demo.nats.io",
 		nats.ErrorHandler(func(nc *nats.Conn, sub *nats.Subscription, err error) {
 			if err == nats.ErrSlowConsumer {
 				dropped, _ := sub.Dropped()

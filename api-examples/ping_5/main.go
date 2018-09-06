@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin ping_5]
 	opts := nats.GetDefaultOptions()
-	opts.Url = "nats://demo.nats.io:4222"
+	opts.Url = "demo.nats.io"
 	// Set maximum number of PINGs out without getting a PONG back
 	// before the connection will be disconnected as a stale connection.
 	opts.MaxPingsOut = 5

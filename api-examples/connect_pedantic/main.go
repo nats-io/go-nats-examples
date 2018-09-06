@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin connect_pedantic]
 	opts := nats.GetDefaultOptions()
-	opts.Url = "nats://demo.nats.io:4222"
+	opts.Url = "demo.nats.io"
 	// Turn on Pedantic
 	opts.Pedantic = true
 	nc, err := opts.Connect()

@@ -10,7 +10,7 @@ import (
 func main() {
 	// [begin ping_20s]
 	// Set Ping Interval to 20 seconds
-	nc, err := nats.Connect("nats://demo.nats.io:4222", nats.PingInterval(20*time.Second))
+	nc, err := nats.Connect("demo.nats.io", nats.PingInterval(20*time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}

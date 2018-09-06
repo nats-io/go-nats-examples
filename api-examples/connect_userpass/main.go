@@ -9,7 +9,7 @@ import (
 func main() {
 	// [begin connect_userpass]
 	// Set a user and plain text password
-	nc, err := nats.Connect("nats://localhost:4222", nats.UserInfo("myname", "password"))
+	nc, err := nats.Connect("localhost", nats.UserInfo("myname", "password"))
 	if err != nil {
 		log.Fatal(err)
 	}
