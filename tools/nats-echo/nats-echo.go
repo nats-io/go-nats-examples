@@ -1,4 +1,4 @@
-// Copyright 2012-2018 The NATS Authors
+// Copyright 2018 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -25,15 +25,15 @@ import (
 )
 
 // NOTE: Can test with demo servers.
-// nats-rply -s demo.nats.io <subject> <response>
-// nats-rply -s demo.nats.io:4443 <subject> <response> (TLS version)
+// nats-echo -s demo.nats.io <subject>
+// nats-echo -s demo.nats.io:4443 <subject> (TLS version)
 
 func usage() {
-	log.Fatalf("Usage: nats-rply [-s server] [-t] <subject> <response>")
+	log.Fatalf("Usage: nats-echo [-s server] [-t] [-nkey seedfile] <subject>")
 }
 
 func printMsg(m *nats.Msg, i int) {
-	log.Printf("[#%d] Received on [%s]: '%s'\n", i, m.Subject, string(m.Data))
+	log.Printf("[#%d] Echoing to [%s]: %q", i, m.Reply, m.Data)
 }
 
 func main() {
@@ -46,12 +46,12 @@ func main() {
 	flag.Parse()
 
 	args := flag.Args()
-	if len(args) < 2 {
+	if len(args) != 1 {
 		usage()
 	}
 
 	// Connect Options.
-	opts := []nats.Option{nats.Name("NATS Sample Responder")}
+	opts := []nats.Option{nats.Name("NATS Echo Service")}
 	opts = setupConnOptions(opts)
 
 	// Use Nkey authentication.
@@ -69,12 +69,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	subj, reply, i := args[0], args[1], 0
+	subj, i := args[0], 0
 
-	nc.Subscribe(subj, func(msg *nats.Msg) {
+	nc.QueueSubscribe(subj, "echo", func(msg *nats.Msg) {
 		i++
-		printMsg(msg, i)
-		nc.Publish(msg.Reply, []byte(reply))
+		if msg.Reply != "" {
+			printMsg(msg, i)
+			// Just echo back what they sent us.
+			nc.Publish(msg.Reply, msg.Data)
+		}
 	})
 	nc.Flush()
 
@@ -82,7 +85,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("Listening on [%s]", subj)
+	log.Printf("Echo Service listening on [%s]\n", subj)
 	if *showTime {
 		log.SetFlags(log.LstdFlags)
 	}
