@@ -1,9 +1,10 @@
 language: go
 sudo: false
 go:
-- 1.1.0
+- 1.11.x
+- 1.10.x
+- 1.9.x
 before_script:
 - go list ./... | xargs go vet -v
 script:
 - go list ./... | xargs go build -v
-
