@@ -28,7 +28,7 @@ import (
 // nats-qsub -s demo.nats.io:4443 <subject> <queue> (TLS version)
 
 func usage() {
-	log.Fatalf("Usage: nats-qsub [-s server] [-t] <subject> <queue>")
+	log.Fatalf("Usage: nats-qsub [-s server] [-creds file] [-t] <subject> <queue>")
 }
 
 func printMsg(m *nats.Msg, i int) {
@@ -37,7 +37,7 @@ func printMsg(m *nats.Msg, i int) {
 
 func main() {
 	var urls = flag.String("s", nats.DefaultURL, "The nats server URLs (separated by comma)")
-	var nkeyFile = flag.String("nkey", "", "Use the nkey seed file for authentication")
+	var userCreds = flag.String("creds", "", "User Credentials File")
 	var showTime = flag.Bool("t", false, "Display timestamps")
 
 	log.SetFlags(0)
@@ -53,13 +53,9 @@ func main() {
 	opts := []nats.Option{nats.Name("NATS Sample Queue Subscriber")}
 	opts = setupConnOptions(opts)
 
-	// Use Nkey authentication.
-	if *nkeyFile != "" {
-		opt, err := nats.NkeyOptionFromSeed(*nkeyFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		opts = append(opts, opt)
+	// Use UserCredentials
+	if *userCreds != "" {
+		opts = append(opts, nats.UserCredentials(*userCreds))
 	}
 
 	// Connect to NATS
@@ -95,8 +91,7 @@ func setupConnOptions(opts []nats.Option) []nats.Option {
 	opts = append(opts, nats.ReconnectWait(reconnectDelay))
 	opts = append(opts, nats.MaxReconnects(int(totalWait/reconnectDelay)))
 	opts = append(opts, nats.DisconnectHandler(func(nc *nats.Conn) {
-		log.Printf("Disconnected")
-		log.Printf("Reconnecting for next %.0fm", totalWait.Minutes())
+		log.Printf("Disconnected: will attempt reconnects for %.0fm", totalWait.Minutes())
 	}))
 	opts = append(opts, nats.ReconnectHandler(func(nc *nats.Conn) {
 		log.Printf("Reconnected [%s]", nc.ConnectedUrl())

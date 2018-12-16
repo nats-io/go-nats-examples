@@ -1,4 +1,15 @@
-// Copyright 2012-2016 Apcera Inc. All rights reserved.
+// Copyright 2012-2018 The NATS Authors
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 package main
 
@@ -6,11 +17,15 @@ import (
 	"flag"
 	"log"
 	"runtime"
+	"time"
 
 	"github.com/nats-io/go-nats"
 )
 
-// NOTE: Use tls scheme for TLS, e.g. nats-rply -s tls://demo.nats.io:4443 foo hello
+// NOTE: Can test with demo servers.
+// nats-qrply -s demo.nats.io <subject> <queue> <response>
+// nats-qrply -s demo.nats.io:4443 <subject> <queue> <response> (TLS version)
+
 func usage() {
 	log.Fatalf("Usage: nats-rply [-s server][-t] <subject> <queuegroup> <reponse>\n")
 }
@@ -21,6 +36,7 @@ func printMsg(m *nats.Msg, i int) {
 
 func main() {
 	var urls = flag.String("s", nats.DefaultURL, "The nats server URLs (separated by comma)")
+	var userCreds = flag.String("creds", "", "User Credentials File")
 	var showTime = flag.Bool("t", false, "Display timestamps")
 
 	log.SetFlags(0)
@@ -32,9 +48,19 @@ func main() {
 		usage()
 	}
 
-	nc, err := nats.Connect(*urls)
+	// Connect Options.
+	opts := []nats.Option{nats.Name("NATS Sample Scalable Responder")}
+	opts = setupConnOptions(opts)
+
+	// Use UserCredentials
+	if *userCreds != "" {
+		opts = append(opts, nats.UserCredentials(*userCreds))
+	}
+
+	// Connect to NATS
+	nc, err := nats.Connect(*urls, opts...)
 	if err != nil {
-		log.Fatalf("Can't connect: %v\n", err)
+		log.Fatal(err)
 	}
 
 	subj, queueGroup, reply, i := args[0], args[1], args[2], 0
@@ -59,4 +85,22 @@ func main() {
 	}
 
 	runtime.Goexit()
+}
+
+func setupConnOptions(opts []nats.Option) []nats.Option {
+	totalWait := 10 * time.Minute
+	reconnectDelay := time.Second
+
+	opts = append(opts, nats.ReconnectWait(reconnectDelay))
+	opts = append(opts, nats.MaxReconnects(int(totalWait/reconnectDelay)))
+	opts = append(opts, nats.DisconnectHandler(func(nc *nats.Conn) {
+		log.Printf("Disconnected: will attempt reconnects for %.0fm", totalWait.Minutes())
+	}))
+	opts = append(opts, nats.ReconnectHandler(func(nc *nats.Conn) {
+		log.Printf("Reconnected [%s]", nc.ConnectedUrl())
+	}))
+	opts = append(opts, nats.ClosedHandler(func(nc *nats.Conn) {
+		log.Fatal("Exiting, no servers available")
+	}))
+	return opts
 }
