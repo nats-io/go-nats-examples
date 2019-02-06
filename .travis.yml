@@ -8,3 +8,14 @@ before_script:
 - go list ./... | xargs go vet -v
 script:
 - go list ./... | xargs go build -v
+
+after_success:
+- git reset --hard
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL http://git.io/goreleaser | bash -s -- --config releaser.yml
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
