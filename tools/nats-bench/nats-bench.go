@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"strings"
 	"sync"
 	"time"
 
@@ -35,7 +34,7 @@ const (
 )
 
 func usage() {
-	log.Fatalf("Usage: nats-bench [-s server (%s)] [--tls] [-np NUM_PUBLISHERS] [-ns NUM_SUBSCRIBERS] [-n NUM_MSGS] [-ms MESSAGE_SIZE] [-csv csvfile] <subject>\n", nats.DefaultURL)
+	log.Fatalf("Usage: nats-bench [-s server (%s)] [--tls] [-np NUM_PUBLISHERS] [-ns NUM_SUBSCRIBERS] [-n NUM_MSGS] [-ms MESSAGE_SIZE] [-csv csvfile] [-creds file] [-nkey file] <subject>\n", nats.DefaultURL)
 }
 
 var benchmark *bench.Benchmark
@@ -48,6 +47,8 @@ func main() {
 	var numMsgs = flag.Int("n", DefaultNumMsgs, "Number of Messages to Publish")
 	var msgSize = flag.Int("ms", DefaultMessageSize, "Size of the message.")
 	var csvFile = flag.String("csv", "", "Save bench data to csv file")
+	var userCreds = flag.String("creds", "", "User Credentials File")
+	var nkeyFile = flag.String("nkey", "", "NKey Seed File")
 
 	log.SetFlags(0)
 	flag.Usage = usage
@@ -62,13 +63,31 @@ func main() {
 		log.Fatal("Number of messages should be greater than zero.")
 	}
 
-	// Setup the option block
-	opts := nats.GetDefaultOptions()
-	opts.Servers = strings.Split(*urls, ",")
-	for i, s := range opts.Servers {
-		opts.Servers[i] = strings.Trim(s, " ")
+	// Connect Options.
+	opts := []nats.Option{nats.Name("NATS Benchmark")}
+
+	if *userCreds != "" && *nkeyFile != "" {
+		log.Fatal("specify -seed or -creds")
 	}
-	opts.Secure = *tls
+
+	// Use UserCredentials
+	if *userCreds != "" {
+		opts = append(opts, nats.UserCredentials(*userCreds))
+	}
+
+	// Use Nkey authentication.
+	if *nkeyFile != "" {
+		opt, err := nats.NkeyOptionFromSeed(*nkeyFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		opts = append(opts, opt)
+	}
+
+	// Use TLS specified
+	if *tls {
+		opts = append(opts, nats.Secure(nil))
+	}
 
 	benchmark = bench.NewBenchmark("NATS", *numSubs, *numPubs)
 
@@ -80,7 +99,13 @@ func main() {
 	// Run Subscribers first
 	startwg.Add(*numSubs)
 	for i := 0; i < *numSubs; i++ {
-		go runSubscriber(&startwg, &donewg, opts, *numMsgs, *msgSize)
+		nc, err := nats.Connect(*urls, opts...)
+		if err != nil {
+			log.Fatalf("Can't connect: %v\n", err)
+		}
+		defer nc.Close()
+
+		go runSubscriber(nc, &startwg, &donewg, *numMsgs, *msgSize)
 	}
 	startwg.Wait()
 
@@ -88,7 +113,13 @@ func main() {
 	startwg.Add(*numPubs)
 	pubCounts := bench.MsgsPerClient(*numMsgs, *numPubs)
 	for i := 0; i < *numPubs; i++ {
-		go runPublisher(&startwg, &donewg, opts, pubCounts[i], *msgSize)
+		nc, err := nats.Connect(*urls, opts...)
+		if err != nil {
+			log.Fatalf("Can't connect: %v\n", err)
+		}
+		defer nc.Close()
+
+		go runPublisher(nc, &startwg, &donewg, pubCounts[i], *msgSize)
 	}
 
 	log.Printf("Starting benchmark [msgs=%d, msgsize=%d, pubs=%d, subs=%d]\n", *numMsgs, *msgSize, *numPubs, *numSubs)
@@ -107,12 +138,7 @@ func main() {
 	}
 }
 
-func runPublisher(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs int, msgSize int) {
-	nc, err := opts.Connect()
-	if err != nil {
-		log.Fatalf("Can't connect: %v\n", err)
-	}
-	defer nc.Close()
+func runPublisher(nc *nats.Conn, startwg, donewg *sync.WaitGroup, numMsgs int, msgSize int) {
 	startwg.Done()
 
 	args := flag.Args()
@@ -133,12 +159,7 @@ func runPublisher(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs in
 	donewg.Done()
 }
 
-func runSubscriber(startwg, donewg *sync.WaitGroup, opts nats.Options, numMsgs int, msgSize int) {
-	nc, err := opts.Connect()
-	if err != nil {
-		log.Fatalf("Can't connect: %v\n", err)
-	}
-
+func runSubscriber(nc *nats.Conn, startwg, donewg *sync.WaitGroup, numMsgs int, msgSize int) {
 	args := flag.Args()
 	subj := args[0]
 
