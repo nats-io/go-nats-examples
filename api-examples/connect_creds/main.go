@@ -8,11 +8,7 @@ import (
 
 func main() {
 	// [begin connect_creds]
-	opt, err := nats.NkeyOptionFromSeed("seed.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	nc, err := nats.Connect("localhost", opt)
+	nc, err := nats.Connect("localhost", nats.UserCredentials("path_to_creds_file"))
 	if err != nil {
 		log.Fatal(err)
 	}
