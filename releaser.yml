@@ -29,14 +29,6 @@ builds:
     - windows
   goarch:
     - amd64
-- main: ./tools/nats-qrply/nats-qrply.go
-  binary: nats-qrply
-  goos:
-    - darwin
-    - linux
-    - windows
-  goarch:
-    - amd64
 - main: ./tools/nats-qsub/nats-qsub.go
   binary: nats-qsub
   goos:

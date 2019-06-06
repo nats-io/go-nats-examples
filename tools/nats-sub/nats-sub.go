@@ -1,4 +1,4 @@
-// Copyright 2012-2018 The NATS Authors
+// Copyright 2012-2019 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,10 +16,11 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 	"runtime"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 // NOTE: Can test with demo servers.
@@ -27,7 +28,13 @@ import (
 // nats-sub -s demo.nats.io:4443 <subject> (TLS version)
 
 func usage() {
-	log.Fatalf("Usage: nats-sub [-s server] [-creds file] [-nkey file] [-t] <subject>")
+	log.Printf("Usage: nats-sub [-s server] [-creds file] [-t] <subject>\n")
+	flag.PrintDefaults()
+}
+
+func showUsageAndExit(exitcode int) {
+	usage()
+	os.Exit(exitcode)
 }
 
 func printMsg(m *nats.Msg, i int) {
@@ -37,38 +44,29 @@ func printMsg(m *nats.Msg, i int) {
 func main() {
 	var urls = flag.String("s", nats.DefaultURL, "The nats server URLs (separated by comma)")
 	var userCreds = flag.String("creds", "", "User Credentials File")
-	var nkeyFile = flag.String("nkey", "", "NKey Seed File")
 	var showTime = flag.Bool("t", false, "Display timestamps")
+	var showHelp = flag.Bool("h", false, "Show help message")
 
 	log.SetFlags(0)
 	flag.Usage = usage
 	flag.Parse()
 
+	if *showHelp {
+		showUsageAndExit(0)
+	}
+
 	args := flag.Args()
 	if len(args) != 1 {
-		usage()
+		showUsageAndExit(1)
 	}
 
 	// Connect Options.
 	opts := []nats.Option{nats.Name("NATS Sample Subscriber")}
 	opts = setupConnOptions(opts)
 
-	if *userCreds != "" && *nkeyFile != "" {
-		log.Fatal("specify -seed or -creds")
-	}
-
 	// Use UserCredentials
 	if *userCreds != "" {
 		opts = append(opts, nats.UserCredentials(*userCreds))
-	}
-
-	// Use Nkey authentication.
-	if *nkeyFile != "" {
-		opt, err := nats.NkeyOptionFromSeed(*nkeyFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		opts = append(opts, opt)
 	}
 
 	// Connect to NATS
@@ -110,7 +108,7 @@ func setupConnOptions(opts []nats.Option) []nats.Option {
 		log.Printf("Reconnected [%s]", nc.ConnectedUrl())
 	}))
 	opts = append(opts, nats.ClosedHandler(func(nc *nats.Conn) {
-		log.Fatal("Exiting, no servers available")
+		log.Fatalf("Exiting: %v", nc.LastError())
 	}))
 	return opts
 }
