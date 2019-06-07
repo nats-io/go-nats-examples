@@ -17,7 +17,7 @@ func main() {
 	if err := nc.Publish("updates", []byte("All is Well")); err != nil {
 		log.Fatal(err)
 	}
+	// [end publish_bytes]
 	// Make sure the message goes through before we close
 	nc.Flush()
-	// [end publish_bytes]
 }

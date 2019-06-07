@@ -32,9 +32,8 @@ func main() {
 
 	// Send the time
 	nc.Publish(msg.Reply, timeAsBytes)
-
+	// [end subscribe_w_reply]
 	// Flush and close the connection
 	nc.Flush()
 	nc.Close()
-	// [end subscribe_w_reply]
 }
