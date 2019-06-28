@@ -6,7 +6,7 @@
 
 # Steps
 
-1. Run a [nats-server](http://www.github.com/nats-io/nats-server) or connect the NATS programs to the [demo server](https://demo.nats.io:8222), e.g. ` nats-pub -s demo.nats.io subject msg`
+1. Run a [nats-server](http://www.github.com/nats-io/nats-server) or connect the NATS programs to the [demo server](http://demo.nats.io:8222), e.g. ` nats-pub -s demo.nats.io subject msg`
 
 	```
 	go get github.com/nats-io/nats-server; nats-server &

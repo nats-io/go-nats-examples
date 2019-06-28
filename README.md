@@ -10,7 +10,7 @@
 # Overview
 This repo contains go-gettable [nats.go](www.github.com/nats-io/nats.go) examples and client code as well as api examples from the documentation.
 
-Install your own server, or optionally utilize the [demo server](https://demo.nats.io:8222)
+Install your own server, or optionally utilize the [demo server](http://demo.nats.io:8222)
 
   1. Get and run nats-sub:
      ```
