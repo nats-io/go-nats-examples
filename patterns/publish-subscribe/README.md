@@ -11,26 +11,29 @@ message (at-most in the case of gnatsd) once and consumed copies disappear from 
 "
 
 # Publish / Subscribe
-To demonstrate publish/subscribe on a NATS Server with either your own
-[gnatsd](http://www.github.com/nats-io/gnatsd) or a
-[NATS.cloud](https://www.nats.cloud) instance:
+To demonstrate NATS publish/subscribe.
 
   1. Get and run nats-sub:
      ```
-     go get github.com/nats-io/go-nats-examples/nats-sub
-     nats-sub -s tls://user:password@server:port channel_name
+     go get github.com/nats-io/go-nats-examples/tools/nats-sub
+     nats-sub -s demo.nats.io some_subject
      ```
-  1. Get and run nats-pub:
+  2. Get and run nats-pub:
      ```
-     go get github.com/nats-io/go-nats-examples/nats-pub
-     nats-pub -s tls://user:password@server:port channel_name message
+     go get github.com/nats-io/go-nats-examples/tools/nats-pub
+     nats-pub -s demo.nats.io some_subject message
      ```
-  1. Verify publisher output:
+  3. Verify publisher output:
      ```
-     Published [channel_name] : 'message'
+     Published [subject_name] : 'message'
      ```
-  1. Verify subscriber output:
+  4. Verify subscriber output:
      ```
-     Listening on [channel_name]
+     Listening on [subject_name]
      [#1] Received on [channel_name]: 'message'
+     ```
+
+  4. Optionally install your own server:
+     ```
+     go get github.com/nats-io/nats-server; nats-server &
      ```

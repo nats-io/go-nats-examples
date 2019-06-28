@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -26,8 +26,11 @@ func main() {
 
 	msgAfterDrain := "not this one"
 
+	// Just to not collide using the demo server with other users.
+	subject := nats.NewInbox()
+
 	// This callback will process each message slowly
-	sub, err := nc.Subscribe("updates", func(m *nats.Msg) {
+	sub, err := nc.Subscribe(subject, func(m *nats.Msg) {
 		if string(m.Data) == msgAfterDrain {
 			errCh <- fmt.Errorf("Should not have received this message")
 			return
@@ -41,7 +44,7 @@ func main() {
 
 	// Send 2 messages
 	for i := 0; i < 2; i++ {
-		nc.Publish("updates", []byte("hello"))
+		nc.Publish(subject, []byte("hello"))
 	}
 
 	// Call Drain on the subscription. It unsubscribes but
@@ -51,7 +54,7 @@ func main() {
 	}
 
 	// Send one more message, this message should not be received
-	nc.Publish("updates", []byte(msgAfterDrain))
+	nc.Publish(subject, []byte(msgAfterDrain))
 
 	// Wait for the subscription to have processed the 2 messages.
 	done.Wait()

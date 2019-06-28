@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin connect_token]
 	// Set a token
-	nc, err := nats.Connect("localhost", nats.Token("mytoken"))
+	nc, err := nats.Connect("127.0.0.1", nats.Name("API Token Example"), nats.Token("mytoken"))
 	if err != nil {
 		log.Fatal(err)
 	}

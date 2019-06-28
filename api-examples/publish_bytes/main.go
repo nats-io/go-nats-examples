@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin publish_bytes]
-	nc, err := nats.Connect("demo.nats.io")
+	nc, err := nats.Connect("demo.nats.io", nats.Name("API PublishBytes Example"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -18,6 +18,4 @@ func main() {
 		log.Fatal(err)
 	}
 	// [end publish_bytes]
-	// Make sure the message goes through before we close
-	nc.Flush()
 }

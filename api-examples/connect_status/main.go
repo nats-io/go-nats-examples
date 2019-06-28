@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin connect_status]
-	nc, err := nats.Connect("demo.nats.io")
+	nc, err := nats.Connect("demo.nats.io", nats.Name("API Example"))
 	if err != nil {
 		log.Fatal(err)
 	}

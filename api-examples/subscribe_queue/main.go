@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -29,7 +29,5 @@ func main() {
 	// Wait for messages to come in
 	wg.Wait()
 
-	// Close the connection
-	nc.Close()
 	// [end subscribe_queue]
 }

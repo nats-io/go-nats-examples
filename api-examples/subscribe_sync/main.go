@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -30,7 +30,5 @@ func main() {
 	// Use the response
 	log.Printf("Reply: %s", msg.Data)
 
-	// Close the connection
-	nc.Close()
 	// [end subscribe_sync]
 }

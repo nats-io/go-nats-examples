@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin connect_creds]
-	nc, err := nats.Connect("localhost", nats.UserCredentials("path_to_creds_file"))
+	nc, err := nats.Connect("127.0.0.1", nats.UserCredentials("path_to_creds_file"))
 	if err != nil {
 		log.Fatal(err)
 	}

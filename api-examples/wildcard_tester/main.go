@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -36,7 +36,5 @@ func main() {
 	nc.Publish("time.eu.east", []byte(formatted))
 	nc.Publish("time.eu.east.warsaw", []byte(formatted))
 
-	// Close the connection
-	nc.Close()
 	// [end wildcard_tester]
 }

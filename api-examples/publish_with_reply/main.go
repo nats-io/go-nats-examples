@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	}
 	defer nc.Close()
 
-	// Create a unique subject name
+	// Create a unique subject name for replies.
 	uniqueReplyTo := nats.NewInbox()
 
 	// Listen for a single response
@@ -24,7 +24,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Send the request
+	// Send the request.
+	// If processing is synchronous, use Request() which returns the response message.
 	if err := nc.PublishRequest("time", uniqueReplyTo, nil); err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +39,5 @@ func main() {
 	// Use the response
 	log.Printf("Reply: %s", msg.Data)
 
-	// Close the connection
-	nc.Close()
 	// [end publish_with_reply]
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -12,9 +12,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer nc.Close()
+
 	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	if err != nil {
-		nc.Close()
 		log.Fatal(err)
 	}
 	defer ec.Close()
@@ -29,7 +30,5 @@ func main() {
 	if err := ec.Publish("updates", &stock{Symbol: "GOOG", Price: 1200}); err != nil {
 		log.Fatal(err)
 	}
-	// Make sure the message goes through before we close
-	ec.Flush()
 	// [end publish_json]
 }

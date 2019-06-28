@@ -4,14 +4,14 @@ import (
 	"log"
 	"strings"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin reconnect_no_random]
-	servers := []string{"nats://localhost:1222",
-		"nats://localhost:1223",
-		"nats://localhost:1224",
+	servers := []string{"nats://127.0.0.1:1222",
+		"nats://127.0.0.1:1223",
+		"nats://127.0.0.1:1224",
 	}
 
 	nc, err := nats.Connect(strings.Join(servers, ","), nats.DontRandomize())
