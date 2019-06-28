@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -31,15 +31,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Just to not collide using the demo server with other users.
+	subject := nats.NewInbox()
+
 	// Subscribe, but add some delay while processing.
-	if _, err := nc.Subscribe("foo", func(_ *nats.Msg) {
+	if _, err := nc.Subscribe(subject, func(_ *nats.Msg) {
 		time.Sleep(200 * time.Millisecond)
 	}); err != nil {
 		log.Fatal(err)
 	}
 
 	// Publish a message
-	if err := nc.Publish("foo", []byte("hello")); err != nil {
+	if err := nc.Publish(subject, []byte("hello")); err != nil {
 		log.Fatal(err)
 	}
 

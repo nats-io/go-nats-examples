@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -32,7 +32,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Close the connection
-	nc.Close()
 	// [end unsubscribe]
 }

@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin error_listener]
 	// Set the callback that will be invoked when an asynchronous error occurs.
 	nc, err := nats.Connect("demo.nats.io",
-		nats.ErrorHandler(func(nc *nats.Conn, sub *nats.Subscription, err error) {
+		nats.ErrorHandler(func(_ *nats.Conn, _ *nats.Subscription, err error) {
 			log.Printf("Error: %v", err)
 		}))
 	if err != nil {

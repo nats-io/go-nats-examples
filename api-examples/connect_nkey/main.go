@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	nc, err := nats.Connect("localhost", opt)
+	nc, err := nats.Connect("127.0.0.1", opt)
 	if err != nil {
 		log.Fatal(err)
 	}

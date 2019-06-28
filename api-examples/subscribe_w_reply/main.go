@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -30,10 +30,8 @@ func main() {
 	// Get the time
 	timeAsBytes := []byte(time.Now().String())
 
-	// Send the time
-	nc.Publish(msg.Reply, timeAsBytes)
+	// Send the time as the response.
+	msg.Respond(timeAsBytes)
+
 	// [end subscribe_w_reply]
-	// Flush and close the connection
-	nc.Flush()
-	nc.Close()
 }

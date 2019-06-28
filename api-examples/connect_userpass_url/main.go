@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin connect_userpass_url]
 	// Set a user and plain text password
-	nc, err := nats.Connect("myname:password@localhost")
+	nc, err := nats.Connect("myname:password@127.0.0.1")
 	if err != nil {
 		log.Fatal(err)
 	}

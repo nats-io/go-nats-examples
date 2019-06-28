@@ -3,30 +3,28 @@
 
 When an application sends a request and expects a response from a receiver, create two channels one for the request and one for the response.
 
-# Request-Reply 
-To demonstrate the request-reply pattern with 
-[gnatsd](http://www.github.com/nats-io/gnatsd) or a
-[NATS.cloud](https://www.nats.cloud) instance:
+# Request-Reply
+To demonstrate NATS request/reply.
 
-  1. Get and run nats-qrply:
+  1. Get and run nats-rply:
      ```
-     go get github.com/nats-io/go-nats-examples/nats-qrly
-     nats-qrply -s tls://user:password@server:port subject group "response" 
+     go get github.com/nats-io/go-nats-examples/tools/nats-rply
+     nats-rply -s demo.nats.io subject "my response"
      ```
   1. Get and run nats-req:
      ```
-     go get github.com/nats-io/go-nats-examples/nats-req
-     nats-req -s tls://user:password@server:port subject "request" 
+     go get github.com/nats-io/go-nats-examples/tools/nats-req
+     nats-req -s demo.nats.io subject "my request"
      ```
   1. Verify requester output:
      ```
-     Published [subject] : 'request'
-     Received [_INBOX.5cE7rtqAFLWkhaLEawkBqL] : 'response'
+     Published [subject] : 'my request'
+     Received [_INBOX.5cE7rtqAFLWkhaLEawkBqL] : 'my response'
      ```
   1. Verify queue reply output:
      ```
-     Listening on [subject] [Group: group]
-     [#1] Received on [subject]: 'request'
+     Listening on [subject]
+     [#1] Received on [subject]: 'my request'
      ```
 
-Now that you've seen how it works, try running multiple `nats-qrply` and sending multiple messages. For each request, a random queue replier will be selected and at most one response will be sent back to the client.
+Now that you've seen how it works, try running multiple `nats-rply` and sending multiple messages. For each request, a random queue responder will be selected and at most one response will be sent back to the client.

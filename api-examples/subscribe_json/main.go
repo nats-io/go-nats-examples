@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -40,7 +40,5 @@ func main() {
 	// Wait for a message to come in
 	wg.Wait()
 
-	// Close the connection
-	ec.Close()
 	// [end subscribe_json]
 }

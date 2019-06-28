@@ -4,12 +4,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin connect_options]
-	nc, err := nats.Connect(nats.DefaultURL, nats.Timeout(10*time.Second))
+	nc, err := nats.Connect("demo.nats.io", nats.Name("API Options Example"), nats.Timeout(10*time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}

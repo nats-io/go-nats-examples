@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
 	// [begin connect_name]
 	// Set a connection name
-	nc, err := nats.Connect("demo.nats.io", nats.Name("my-connection"))
+	nc, err := nats.Connect("demo.nats.io", nats.Name("API Name Example"))
 	if err != nil {
 		log.Fatal(err)
 	}
