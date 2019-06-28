@@ -8,31 +8,28 @@
 [![Build Status](https://travis-ci.org/nats-io/go-nats-examples.svg?branch=master)](http://travis-ci.org/nats-io/go-nats-examples)
 
 # Overview
-This repo contains go-gettable [go-nats](www.github.com/nats-io/go-nats) example client code as well as example code from the documentation.
+This repo contains go-gettable [nats.go](www.github.com/nats-io/nats.go) examples and client code as well as api examples from the documentation.
 
-# Verify a NATS Server
-To verify a NATS Server with either your own
-[gnatsd](www.github.com/nats-io/gnatsd) or a
-[NATS.cloud](www.nats.cloud) instance:
+Install your own server, or optionally utilize the [demo server](https://nats.demo.io:8222)
 
   1. Get and run nats-sub:
      ```
      go get github.com/nats-io/go-nats-examples/tools/nats-sub
-     nats-sub -s tls://user:password@server:port channel_name
+     nats-sub -s demo.nats.io subject_name
      ```
   1. Get and run nats-pub:
      ```
      go get github.com/nats-io/go-nats-examples/tools/nats-pub
-     nats-pub -s tls://user:password@server:port channel_name message
+     nats-pub -s demo.nats.io subject_name msg
      ```
   1. Verify publisher output:
      ```
-     Published [channel_name] : 'message'
+     Published [subject_name] : 'message'
      ```
   1. Verify subscriber output:
      ```
-     Listening on [channel_name]
-     [#1] Received on [channel_name]: 'message'
+     Listening on [subject_name]
+     [#1] Received on [subject_name]: 'message'
      ```
 
 # Patterns
