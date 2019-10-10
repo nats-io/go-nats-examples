@@ -14,6 +14,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -34,7 +35,7 @@ import (
 // nats-echo -s demo.nats.io:4443 <subject> (TLS version)
 
 func usage() {
-	log.Printf("Usage: nats-echo [-s server] [-creds file] [-t] <subject>\n")
+	log.Printf("Usage: nats-echo [-s server] [-i] [-creds file] [-t] <subject>\n")
 	flag.PrintDefaults()
 }
 
@@ -53,6 +54,7 @@ func main() {
 	var showTime = flag.Bool("t", false, "Display timestamps")
 	var showHelp = flag.Bool("h", false, "Show help message")
 	var geoloc = flag.Bool("geo", false, "Display geo location of echo service")
+	var insecure = flag.Bool("i", false, "If TLS set, don't verify certs")
 	var geo string
 
 	log.SetFlags(0)
@@ -79,6 +81,12 @@ func main() {
 	// Use UserCredentials
 	if *userCreds != "" {
 		opts = append(opts, nats.UserCredentials(*userCreds))
+	}
+
+	if *insecure {
+		opts = append(opts, nats.Secure(&tls.Config{
+			InsecureSkipVerify: true,
+		}))
 	}
 
 	// Connect to NATS

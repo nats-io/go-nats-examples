@@ -14,6 +14,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"log"
 	"os"
@@ -28,7 +29,7 @@ import (
 // nats-rply -s demo.nats.io:4443 <subject> <response> (TLS version)
 
 func usage() {
-	log.Printf("Usage: nats-rply [-s server] [-creds file] [-t] [-q queue] <subject> <response>\n")
+	log.Printf("Usage: nats-rply [-s server] [-i] [-creds file] [-t] [-q queue] <subject> <response>\n")
 	flag.PrintDefaults()
 }
 
@@ -47,6 +48,7 @@ func main() {
 	var showTime = flag.Bool("t", false, "Display timestamps")
 	var queueName = flag.String("q", "NATS-RPLY-22", "Queue Group Name")
 	var showHelp = flag.Bool("h", false, "Show help message")
+	var insecure = flag.Bool("i", false, "If TLS set, don't verify certs")
 
 	log.SetFlags(0)
 	flag.Usage = usage
@@ -68,6 +70,12 @@ func main() {
 	// Use UserCredentials
 	if *userCreds != "" {
 		opts = append(opts, nats.UserCredentials(*userCreds))
+	}
+
+	if *insecure {
+		opts = append(opts, nats.Secure(&tls.Config{
+			InsecureSkipVerify: true,
+		}))
 	}
 
 	// Connect to NATS
