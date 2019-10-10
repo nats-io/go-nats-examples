@@ -14,6 +14,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"log"
 	"os"
@@ -27,7 +28,7 @@ import (
 // nats-req -s demo.nats.io:4443 <subject> <msg> (TLS version)
 
 func usage() {
-	log.Printf("Usage: nats-req [-s server] [-creds file] <subject> <msg>\n")
+	log.Printf("Usage: nats-req [-s server] [-i] [-creds file] <subject> <msg>\n")
 	flag.PrintDefaults()
 }
 
@@ -40,6 +41,7 @@ func main() {
 	var urls = flag.String("s", nats.DefaultURL, "The nats server URLs (separated by comma)")
 	var userCreds = flag.String("creds", "", "User Credentials File")
 	var showHelp = flag.Bool("h", false, "Show help message")
+	var insecure = flag.Bool("i", false, "If TLS set, don't verify certs")
 
 	log.SetFlags(0)
 	flag.Usage = usage
@@ -57,9 +59,21 @@ func main() {
 	// Connect Options.
 	opts := []nats.Option{nats.Name("NATS Sample Requestor")}
 
+	if *insecure {
+		opts = append(opts, nats.Secure(&tls.Config{
+			InsecureSkipVerify: true,
+		}))
+	}
+
 	// Use UserCredentials
 	if *userCreds != "" {
 		opts = append(opts, nats.UserCredentials(*userCreds))
+	}
+
+	if *insecure {
+		opts = append(opts, nats.Secure(&tls.Config{
+			InsecureSkipVerify: true,
+		}))
 	}
 
 	// Connect to NATS
