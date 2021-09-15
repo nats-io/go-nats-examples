@@ -1,11 +1,11 @@
 language: go
 sudo: false
 go:
-- 1.11.x
+- 1.17.x
 before_script:
-- go list ./... | xargs go vet -v
+- go vet -v ./...
 script:
-- go list ./... | xargs go build -v
+- go build -v ./...
 
 after_success:
 - git reset --hard
