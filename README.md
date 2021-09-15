@@ -1,11 +1,11 @@
-![](https://raw.githubusercontent.com/nats-io/nats-site/master/src/img/large-logo.png)
+![](https://raw.githubusercontent.com/nats-io/nats-site/main/src/img/large-logo.png)
 
 # NATS - Go Examples and CLI Clients
 
 [Go](http://www.golang.org) examples and CLI clients for the [NATS messaging system](https://nats.io).
 
 [![License Apache 2](https://img.shields.io/badge/License-Apache2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Build Status](https://travis-ci.org/nats-io/go-nats-examples.svg?branch=master)](http://travis-ci.org/nats-io/go-nats-examples)
+[![Build Status](https://travis-ci.org/nats-io/go-nats-examples.svg?branch=main)](http://travis-ci.org/nats-io/go-nats-examples)
 
 # Overview
 This repo contains go-gettable [nats.go](www.github.com/nats-io/nats.go) examples and client code as well as api examples from the documentation.
